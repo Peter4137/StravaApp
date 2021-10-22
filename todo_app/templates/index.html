@@ -10,18 +10,38 @@
   <div class="row">
     <div class="col-md-12">
       <h2>Items</h2>
-      <ul class="list-group mb-4">
+      <table class="table mb-4">
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
         {% for item in items %}
-          <li>{{ item.id }} | {{item.status}} | {{item.title}} </li>
+          <tr class="{{ 'warning' if item['status'] == 'Not Started' else 'info' }}">
+            <td>{{ item.title }}</td>
+            <td>
+              {% if item.status == "Not Started"%}
+              <form action="items/complete/{{item.id}}", method="POST">
+                <input type="submit" value="Mark as complete">
+              </form>
+              {% else %}
+              {{ item.status }}
+              {% endif %}
+            </td>
+            <td>
+              <form action="items/remove/{{item.id}}", method="POST">
+                <input type="submit" value="Remove" style="background-color: red;">
+              </form>
+            </td>
+          </tr>
         {% endfor %}
-        <!-- List the todo items here -->
-      </ul>
+        </table>
     </div>
   </div>
 
-  <form action="/items/add" method="POST">
-    <label>Title</label>
-    <input type="text" id="title", name="title">
+  <h3>Add new item</h3>
+  <form action="/items/add" method="POST" class="form-group">
+    <input type="text" id="title" name="title" placeholder="Title">
     <input type="submit">
   </form>
 {% endblock %}
