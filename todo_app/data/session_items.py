@@ -67,3 +67,28 @@ def save_item(item):
     session['items'] = updated_items
 
     return item
+
+def mark_item_as_complete(id):
+    """
+    Marks an existing item in the session as complete. If no existing item matches the ID of the specified item, nothing is marked as complete
+
+    Args:
+        id: The ID of the item to mark as complete
+    """
+    item_to_complete = get_item(id)
+    item_to_complete["status"] = "Complete"
+    existing_items = get_items()
+
+    updated_items = [item_to_complete if id == existing_item['id'] else existing_item for existing_item in existing_items]
+    session['items'] = updated_items
+
+def remove_item(id):
+    """
+    Removes an existing item from the session. If no existing item matches the ID of the specified item, no item is removed
+
+    Args:
+        id: The ID of the item to remove
+    """
+    items = get_items()
+    filtered_items = list(filter(lambda item: (item["id"] != int(id)), items))
+    session['items'] = filtered_items
