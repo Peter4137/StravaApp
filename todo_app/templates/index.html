@@ -11,18 +11,21 @@
     <div class="col-md-12">
       <h2>Items</h2>
       <table class="table mb-4">
-        <tr>
-          <th>Title</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
         {% for item in items %}
           <tr class="{{ 'warning' if item['status'] == 'Not Started' else 'info' }}">
             <td>{{ item.title }}</td>
             <td>
               {% if item.status == "Not Started"%}
               <form action="items/complete/{{item.id}}", method="POST">
-                <input type="submit" value="Mark as complete">
+                <input type="submit" value="Mark as complete" class="btn btn-info">
               </form>
               {% else %}
               {{ item.status }}
@@ -30,18 +33,19 @@
             </td>
             <td>
               <form action="items/remove/{{item.id}}", method="POST">
-                <input type="submit" value="Remove" style="background-color: red;">
+                <input type="submit" value="Remove" class="btn btn-danger">
               </form>
             </td>
           </tr>
         {% endfor %}
-        </table>
+        </tbody>
+      </table>
     </div>
   </div>
 
   <h3>Add new item</h3>
   <form action="/items/add" method="POST" class="form-group">
-    <input type="text" id="title" name="title" placeholder="Title">
+    <input type="text" id="title" name="title" placeholder="Title" required>
     <input type="submit">
   </form>
 {% endblock %}
