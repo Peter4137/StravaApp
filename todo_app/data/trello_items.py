@@ -10,25 +10,20 @@ api_key = os.environ.get('TRELLO_API_KEY')
 api_token = os.environ.get('TRELLO_TOKEN')
 board_id = os.environ.get('TRELLO_BOARD_ID')
 
-def trello_request(method, path, query_params = []):
+def trello_request(method, path, query_params = {}):
     headers = {
         "Accept": "application/json"
     }
     url = f"{trello_base_url}{path}?key={api_key}&token={api_token}"
 
-    for query_param in query_params:
-        url += f"&{query_param}"
+    response = request(
+        method,
+        url,
+        headers=headers,
+        params=query_params
+    )
+    response.raise_for_status()
 
-    try:
-        response = request(
-            method,
-            url,
-            headers=headers
-        )
-        response.raise_for_status()
-    except exceptions.HTTPError as err:
-        print(err)
-    
     return response.json()
 
 def get_items():
@@ -41,7 +36,7 @@ def get_items():
     def parse_column(column):
         return [Item.from_trello_card(card, column) for card in column["cards"]]
     
-    response = trello_request("GET", f"/1/boards/{board_id}/lists", ["cards=open"])
+    response = trello_request("GET", f"/1/boards/{board_id}/lists", {"cards": "open"})
 
     return sorted(list(itertools.chain(*[parse_column(col) for col in response])), key=lambda item: item.id)
 
@@ -93,7 +88,7 @@ def add_item(title):
     """
 
     todo_id = get_list_id_from_name("To Do")
-    trello_request("POST", f"/1/cards", [f"idList={todo_id}", f"name={title}"])
+    trello_request("POST", f"/1/cards", {"idList": todo_id, "name": title})
 
 def mark_item_as_complete(id):
     """
@@ -104,7 +99,7 @@ def mark_item_as_complete(id):
     """
 
     done_id = get_list_id_from_name("Done")
-    trello_request("PUT", f"/1/cards/{id}", [f"idList={done_id}"])
+    trello_request("PUT", f"/1/cards/{id}", {"idList": done_id})
 
 def remove_item(id):
     """
