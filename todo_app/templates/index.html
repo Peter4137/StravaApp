@@ -14,17 +14,20 @@
         <thead>
           <tr>
             <th>Title</th>
-            <th>Status</th>
             <th>Action</th>
-            <th></th>
+            <th>&nbsp;</th>
           </tr>
         </thead>
         <tbody>
 
+        {% if view_model.to_do_items|length > 0 %}
+        <tr>
+          <td colspan="3"><b>To Do</b></td>
+        </tr>
+
         {% for item in view_model.to_do_items %}
-          <tr class="{{ 'warning' if item.status == 'To Do' else 'info' }}">
+          <tr class="warning">
             <td>{{ item.name }}</td>
-            <td>{{ item.status }}</td>
             <td>
               <form action="items/progress/{{item.id}}", method="POST">
                 <input type="submit" value="Mark as doing" class="btn btn-info">
@@ -38,11 +41,16 @@
             </td>
           </tr>
         {% endfor %}
+        {% endif %}
+
+        {% if view_model.doing_items|length > 0 %}
+        <tr>
+          <td colspan="3"><b>Doing</b></td>
+        </tr>
 
         {% for item in view_model.doing_items %}
-          <tr class="{{ 'warning' if item.status == 'To Do' else 'info' }}">
+          <tr class="info">
             <td>{{ item.name }}</td>
-            <td>{{ item.status }}</td>
             <td>
               <form action="items/progress/{{item.id}}", method="POST">
                 <input type="submit" value="Mark as done" class="btn btn-info">
@@ -55,11 +63,16 @@
             </td>
           </tr>
         {% endfor %}
+        {% endif %}
+
+        {% if view_model.done_items|length > 0 %}
+        <tr>
+          <td colspan="3"><b>Done</b></td>
+        </tr>
 
         {% for item in view_model.done_items %}
-          <tr class="{{ 'warning' if item.status == 'To Do' else 'info' }}">
+          <tr class="info">
             <td>{{ item.name }}</td>
-            <td>{{ item.status }}</td>
             <td></td>
             <td>
               <form action="items/remove/{{item.id}}", method="POST">
@@ -68,6 +81,7 @@
             </td>
           </tr>
         {% endfor %}
+        {% endif %}
         </tbody>
       </table>
     </div>
