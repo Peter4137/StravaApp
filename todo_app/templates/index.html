@@ -19,7 +19,7 @@
           </tr>
         </thead>
         <tbody>
-        {% for item in items %}
+        {% for item in view_model.items %}
           <tr class="{{ 'warning' if item.status == 'To Do' else 'info' }}">
             <td>{{ item.name }}</td>
             <td>
