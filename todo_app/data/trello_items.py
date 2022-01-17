@@ -4,6 +4,7 @@ import itertools
 
 from todo_app.data.item import Item
 from todo_app.data.list import List
+from todo_app.data.status import Status
 
 trello_base_url = "https://api.trello.com" 
 api_key = os.environ.get('TRELLO_API_KEY')
@@ -51,7 +52,7 @@ def get_item(id):
         item: The saved item, or None if no items match the specified ID.
     """
     items = get_items()
-    return next((item for item in items if item['id'] == int(id)), None)
+    return next((item for item in items if item.id == id), None)
 
 def get_lists():
     """
@@ -63,7 +64,7 @@ def get_lists():
     response = trello_request("GET", f"/1/boards/{board_id}/lists")
     return [List.from_trello_list(trello_list) for trello_list in response]
 
-def get_list_id_from_name(name):
+def get_list_id_from_name(status_name: Status):
     """
     Gets the trello list id of a list with the given name, or None if it does not exist
     
@@ -74,7 +75,7 @@ def get_list_id_from_name(name):
         listId: the id of the list, or None if it does not exist 
     """
     trello_lists = get_lists()
-    return next((trello_list.id for trello_list in trello_lists if trello_list.name == name), None)
+    return next((trello_list.id for trello_list in trello_lists if trello_list.name ==status_name.value), None)
 
 def add_item(title):
     """
@@ -87,19 +88,19 @@ def add_item(title):
         item: The saved item.
     """
 
-    todo_id = get_list_id_from_name("To Do")
+    todo_id = get_list_id_from_name(Status.ToDo)
     trello_request("POST", f"/1/cards", {"idList": todo_id, "name": title})
 
-def mark_item_as_complete(id):
+def progress_item(id):
     """
-    Marks an existing item on the trello board as complete. If no existing item matches the ID of the specified item, nothing is marked as complete
+    Progresses an existing item one step (To do -> Doing -> Done). If no existing item matches the ID of the specified item, nothing is marked as done
 
     Args:
-        id: The ID of the item to mark as complete
+        id: The ID of the item to progress 
     """
-
-    done_id = get_list_id_from_name("Done")
-    trello_request("PUT", f"/1/cards/{id}", {"idList": done_id})
+    next_status = Status.get_next(get_item(id).status)
+    status_id = get_list_id_from_name(next_status)
+    trello_request("PUT", f"/1/cards/{id}", {"idList": status_id})
 
 def remove_item(id):
     """

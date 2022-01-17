@@ -1,26 +1,27 @@
 import pytest
 from todo_app.data.item import Item
+from todo_app.data.status import Status
 from todo_app.view_model import ViewModel
 
 @pytest.fixture
 def item_to_do():
-    return Item(1, "To do item", "To Do")
+    return Item(1, "To do item", Status.ToDo.value)
 
 @pytest.fixture
 def item_doing():
-    return Item(2, "Doing item", "Doing")
+    return Item(2, "Doing item", Status.Doing.value)
 
 @pytest.fixture
 def item_done():
-    return Item(3, "Done item", "Done")
+    return Item(3, "Done item", Status.Done.value)
 
 
 @pytest.fixture
 def view_model():
     return ViewModel([
-        Item(1, "To do item", "To Do"),
-        Item(1, "Doing item", "Doing"),
-        Item(1, "Done item", "Done")
+        Item(1, "To do item", Status.ToDo.value),
+        Item(1, "Doing item", Status.Doing.value),
+        Item(1, "Done item", Status.Done.value)
     ])
 
 def test_to_do_items_in_separate_list(view_model: ViewModel):
