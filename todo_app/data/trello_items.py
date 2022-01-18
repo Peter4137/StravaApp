@@ -1,5 +1,5 @@
 import os
-from requests import request, exceptions
+import requests
 import itertools
 
 from todo_app.data.item import Item
@@ -7,7 +7,7 @@ from todo_app.data.list import List
 from todo_app.data.status import Status
 
 trello_base_url = "https://api.trello.com" 
-api_key = os.environ.get('TRELLO_API_KEY')
+api_key = os.environ.get("TRELLO_API_KEY")
 api_token = os.environ.get('TRELLO_TOKEN')
 board_id = os.environ.get('TRELLO_BOARD_ID')
 
@@ -15,9 +15,11 @@ def trello_request(method, path, query_params = {}):
     headers = {
         "Accept": "application/json"
     }
-    url = f"{trello_base_url}{path}?key={api_key}&token={api_token}"
+    query_params["key"] = api_key
+    query_params["token"] = api_token
+    url = f"{trello_base_url}{path}"
 
-    response = request(
+    response = requests.request(
         method,
         url,
         headers=headers,
