@@ -7,7 +7,7 @@ from todo_app import app
 
 @pytest.fixture
 def client():
-    file_path = find_dotenv('.env.test')
+    file_path = find_dotenv(".env.test")
     load_dotenv(file_path, override=True)
     test_app = app.create_app()
     
@@ -15,9 +15,10 @@ def client():
         yield client
 
 def test_index_page(monkeypatch, client):
-    monkeypatch.setattr(requests, 'request', get_lists_stub)
-    response = client.get('/')
-
+    monkeypatch.setattr(requests, "request", get_lists_stub)
+    response = client.get("/")
+    content = response.data.decode('utf8')
+    assert "Test card" in content
 
 class StubResponse():
     def __init__(self, fake_response_data, status):
@@ -28,16 +29,15 @@ class StubResponse():
         return self.fake_response_data
 
     def raise_for_status(self):
-        if str(self.status)[0] != "2":
-            raise ValueError(f"Non 2xx status")
+        pass
 
 def get_lists_stub(method, url, headers, params):
-    test_board_id = os.environ.get('TRELLO_BOARD_ID')
+    test_board_id = os.environ.get("TRELLO_BOARD_ID")
     fake_response_data = None
-    if url == f'https://api.trello.com/1/boards/{test_board_id}/lists':
+    if url == f"https://api.trello.com/1/boards/{test_board_id}/lists":
         fake_response_data = [{
-        'id': '123abc',
-        'name': 'To Do',
-        'cards': [{'id': '456', 'name': 'Test card'}]
+        "id": "123abc",
+        "name": "To Do",
+        "cards": [{"id": "456", "name": "Test card"}]
         }]
     return StubResponse(fake_response_data, 200)
