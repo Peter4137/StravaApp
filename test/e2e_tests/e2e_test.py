@@ -14,7 +14,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 @pytest.fixture(scope='module')
 def app_with_temp_board():
-    file_path = find_dotenv(".env")
+    file_path = find_dotenv("../.env")
     load_dotenv(file_path, override=True)
 
     trello_items = TrelloItems()
