@@ -3,18 +3,6 @@ from todo_app.data.item import Item
 from todo_app.data.status import Status
 from todo_app.view_model import ViewModel
 
-@pytest.fixture
-def item_to_do():
-    return Item(1, "To do item", Status.ToDo.value)
-
-@pytest.fixture
-def item_doing():
-    return Item(2, "Doing item", Status.Doing.value)
-
-@pytest.fixture
-def item_done():
-    return Item(3, "Done item", Status.Done.value)
-
 
 @pytest.fixture
 def view_model():

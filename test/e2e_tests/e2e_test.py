@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import pytest
 import os
 from threading import Thread
@@ -47,6 +46,7 @@ def test_full_journey(driver, app_with_temp_board):
     - Delete item
     """
     base_url = "http://localhost:5000/"
+    driver.implicitly_wait(2)
     driver.get(base_url)
     assert driver.title == 'To-Do App'
 
@@ -54,19 +54,16 @@ def test_full_journey(driver, app_with_temp_board):
     add_item_input.send_keys("Test item")
     add_item_input.send_keys(Keys.RETURN)
 
-    driver.implicitly_wait(2)
     assert driver.find_element(By.ID, "to-do-item")
 
     progress_button = driver.find_element(By.ID, "progress-button")
     progress_button.click()
 
-    driver.implicitly_wait(2)
     assert driver.find_element(By.ID, "doing-item")
 
     progress_button = driver.find_element(By.ID, "progress-button")
     progress_button.click()
 
-    driver.implicitly_wait(2)
     assert driver.find_element(By.ID, "done-item")
 
     delete_button = driver.find_element(By.ID, "delete-button")

@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import pytest
 import os
 import requests
