@@ -1,0 +1,60 @@
+---
+- name: Install and run todo app on VMs
+  hosts: exercise-4-group
+  remote_user: ec2-user
+
+  vars_prompt:
+  - name: trello_api_key
+    prompt: Enter trello api key
+    private: no
+
+  - name: trello_token
+    prompt: enter trello token
+    private: no
+
+  - name: trello_board_id
+    prompt: enter trello board id
+    private: no
+
+  - name: trello_organization_id
+    prompt: enter trello organisation id
+    private: no
+
+
+  tasks:
+  - name: install git
+    ansible.builtin.yum:
+      name:
+        - git
+        - python3
+      state: present
+    become: yes
+
+  - name: install poetry
+    ansible.builtin.shell:
+      cmd: curl -sSL https://install.python-poetry.org | python3 -
+      creates:  /home/ec2-user/.local/bin/poetry
+
+  - name: create directory for todo app code
+    ansible.builtin.file:
+      path: /opt/todoapp
+      state: directory
+      mode: '777'
+    become: yes
+
+  - name: clone todo app git repo
+    ansible.builtin.git:
+      repo: 'https://github.com/Peter4137/DevOps-Course-Starter.git'
+      dest: /opt/todoapp
+      version: Exercise-4
+
+  - name: install dependencies
+    ansible.builtin.shell:
+      chdir: /opt/todoapp
+      cmd: . /home/ec2-user/.bash_profile && poetry install
+
+  - name: create env file
+    ansible.builtin.template:
+      src: /home/ec2-user/.env.j2
+      dest: /opt/todoapp/.env
+      mode: '777'
