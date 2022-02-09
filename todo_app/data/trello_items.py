@@ -1,111 +1,134 @@
 import os
-from requests import request, exceptions
+import requests
 import itertools
 
 from todo_app.data.item import Item
 from todo_app.data.list import List
+from todo_app.data.status import Status
 
-trello_base_url = "https://api.trello.com" 
-api_key = os.environ.get('TRELLO_API_KEY')
-api_token = os.environ.get('TRELLO_TOKEN')
-board_id = os.environ.get('TRELLO_BOARD_ID')
+class TrelloItems:
 
-def trello_request(method, path, query_params = {}):
-    headers = {
-        "Accept": "application/json"
-    }
-    url = f"{trello_base_url}{path}?key={api_key}&token={api_token}"
+    def __init__(self) -> None:
+        self.trello_base_url = "https://api.trello.com" 
+        self.api_key = os.environ.get("TRELLO_API_KEY")
+        self.api_token = os.environ.get('TRELLO_TOKEN')
+        self.board_id = os.environ.get('TRELLO_BOARD_ID')
+        self.organization_id = os.environ.get('TRELLO_ORGANIZATION_ID')
 
-    response = request(
-        method,
-        url,
-        headers=headers,
-        params=query_params
-    )
-    response.raise_for_status()
+    def trello_request(self, method, path, query_params = {}):
+        headers = {
+            "Accept": "application/json"
+        }
+        query_params["key"] = self.api_key
+        query_params["token"] = self.api_token
+        url = f"{self.trello_base_url}{path}"
 
-    return response.json()
+        response = requests.request(
+            method,
+            url,
+            headers=headers,
+            params=query_params
+        )
+        response.raise_for_status()
 
-def get_items():
-    """
-    Fetches all saved items from trello.
+        return response.json()
 
-    Returns:
-        list: The list of saved items.
-    """
-    def parse_column(column):
-        return [Item.from_trello_card(card, column) for card in column["cards"]]
-    
-    response = trello_request("GET", f"/1/boards/{board_id}/lists", {"cards": "open"})
+    def get_items(self):
+        """
+        Fetches all saved items from trello.
 
-    return sorted(list(itertools.chain(*[parse_column(col) for col in response])), key=lambda item: item.id)
+        Returns:
+            list: The list of saved items.
+        """
+        def parse_column(column):
+            return [Item.from_trello_card(card, column) for card in column["cards"]]
+        
+        response = self.trello_request("GET", f"/1/boards/{self.board_id}/lists", {"cards": "open"})
 
-def get_item(id):
-    """
-    Fetches the saved item with the specified ID.
+        return sorted(list(itertools.chain(*[parse_column(col) for col in response])), key=lambda item: item.id)
 
-    Args:
-        id: The ID of the item.
+    def get_item(self, id):
+        """
+        Fetches the saved item with the specified ID.
 
-    Returns:
-        item: The saved item, or None if no items match the specified ID.
-    """
-    items = get_items()
-    return next((item for item in items if item['id'] == int(id)), None)
+        Args:
+            id: The ID of the item.
 
-def get_lists():
-    """
-    Gets all the lists for the trello board
+        Returns:
+            item: The saved item, or None if no items match the specified ID.
+        """
+        items = self.get_items()
+        return next((item for item in items if item.id == id), None)
 
-    Returns:
-        lists: a list of List objects
-    """
-    response = trello_request("GET", f"/1/boards/{board_id}/lists")
-    return [List.from_trello_list(trello_list) for trello_list in response]
+    def get_lists(self):
+        """
+        Gets all the lists for the trello board
 
-def get_list_id_from_name(name):
-    """
-    Gets the trello list id of a list with the given name, or None if it does not exist
-    
-    Args:
-        name: The name of the list.
+        Returns:
+            lists: a list of List objects
+        """
+        response = self.trello_request("GET", f"/1/boards/{self.board_id}/lists")
+        return [List.from_trello_list(trello_list) for trello_list in response]
 
-    Returns:
-        listId: the id of the list, or None if it does not exist 
-    """
-    trello_lists = get_lists()
-    return next((trello_list.id for trello_list in trello_lists if trello_list.name == name), None)
+    def get_list_id_from_name(self, status_name: Status):
+        """
+        Gets the trello list id of a list with the given name, or None if it does not exist
+        
+        Args:
+            name: The name of the list.
 
-def add_item(title):
-    """
-    Adds a new item with the specified title to the session.
+        Returns:
+            listId: the id of the list, or None if it does not exist 
+        """
+        trello_lists = self.get_lists()
+        return next((trello_list.id for trello_list in trello_lists if trello_list.name ==status_name.value), None)
 
-    Args:
-        title: The title of the item.
+    def add_item(self, title):
+        """
+        Adds a new item with the specified title to the session.
 
-    Returns:
-        item: The saved item.
-    """
+        Args:
+            title: The title of the item.
 
-    todo_id = get_list_id_from_name("To Do")
-    trello_request("POST", f"/1/cards", {"idList": todo_id, "name": title})
+        Returns:
+            item: The saved item.
+        """
 
-def mark_item_as_complete(id):
-    """
-    Marks an existing item on the trello board as complete. If no existing item matches the ID of the specified item, nothing is marked as complete
+        todo_id = self.get_list_id_from_name(Status.ToDo)
+        self.trello_request("POST", f"/1/cards", {"idList": todo_id, "name": title})
 
-    Args:
-        id: The ID of the item to mark as complete
-    """
+    def progress_item(self, id):
+        """
+        Progresses an existing item one step (To do -> Doing -> Done). If no existing item matches the ID of the specified item, nothing is marked as done
 
-    done_id = get_list_id_from_name("Done")
-    trello_request("PUT", f"/1/cards/{id}", {"idList": done_id})
+        Args:
+            id: The ID of the item to progress 
+        """
+        next_status = Status.get_next(self.get_item(id).status)
+        status_id = self.get_list_id_from_name(next_status)
+        self.trello_request("PUT", f"/1/cards/{id}", {"idList": status_id})
 
-def remove_item(id):
-    """
-    Removes an existing item from the board. If no existing item matches the ID of the specified item, no item is removed
+    def remove_item(self, id):
+        """
+        Removes an existing item from the board. If no existing item matches the ID of the specified item, no item is removed
 
-    Args:
-        id: The ID of the item to remove
-    """
-    trello_request("DELETE", f"/1/cards/{id}")
+        Args:
+            id: The ID of the item to remove
+        """
+        self.trello_request("DELETE", f"/1/cards/{id}")
+
+
+    def create_board(self, name):
+        """
+        Creates a new board in trello
+        """
+
+        response = self.trello_request("POST", f"/1/boards", {"name": name, "idOrganization": self.organization_id})
+        return response["id"]
+
+    def delete_board(self, id):
+        """ 
+        Deletes the board with the given ID
+        """
+
+        self.trello_request("DELETE", f"/1/boards/{id}")
