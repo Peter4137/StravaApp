@@ -58,3 +58,16 @@
       src: /home/ec2-user/.env.j2
       dest: /opt/todoapp/.env
       mode: '777'
+
+  - name: copy todoapp.service
+    ansible.builtin.copy:
+      src: todoapp.service
+      dest: /etc/systemd/system/todoapp.service
+      mode: '777'
+    become: yes
+
+  - name: Start todo app
+    ansible.builtin.systemd:
+      state: restarted
+      name: todoapp
+    become: yes
