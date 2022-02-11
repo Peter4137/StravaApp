@@ -68,6 +68,7 @@
 
   - name: Start todo app
     ansible.builtin.systemd:
-      state: restarted
+      state: started
       name: todoapp
+      daemon_reload: yes
     become: yes
