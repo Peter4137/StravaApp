@@ -59,3 +59,14 @@ Tests can be run by using:
 ```bash
 $ poetry run pytest
 ```
+
+## Running on a VM
+
+* Copy the inventory, todoapp.service and ansible-playbook.yml files over to your control node (or clone the entire repo)
+* [Set up SSH](https://www.ssh.com/academy/ssh/copy-id) from the control node to the managed node 
+* Edit the inventory file to contain all IP addresses of your managed nodes you want to set up
+* Ensure ansible is installed on the control node: 
+    * Install:  `sudo pip install ansible`
+    * Check installation:  `ansible --version`
+* Run the playbook: `ansible-playbook ansible-playbook.yml -i inventory`
+* Check the service is running on the managed nodes

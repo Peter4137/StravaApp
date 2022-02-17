@@ -6,7 +6,7 @@
   vars_prompt:
   - name: trello_api_key
     prompt: Enter trello api key
-    private: no
+    private: yes
 
   - name: trello_token
     prompt: enter trello token
