@@ -1,4 +1,4 @@
-from todo_app.data.status import Status
+from data.status import Status
 
 
 class Item:
