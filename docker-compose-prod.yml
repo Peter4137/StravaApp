@@ -6,7 +6,6 @@ services:
     build:
       context: .
       target: production
-      dockerfile: Dockerfile
     ports:
       - "80:80"
     env_file:

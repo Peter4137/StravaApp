@@ -1,5 +1,4 @@
-from data.status import Status
-
+from todo_app.data.status import Status
 
 class Item:
     def __init__(self, id, name, status = Status.ToDo.value):

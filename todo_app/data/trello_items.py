@@ -2,9 +2,9 @@ import os
 import requests
 import itertools
 
-from data.item import Item
-from data.list import List
-from data.status import Status
+from todo_app.data.item import Item
+from todo_app.data.list import List
+from todo_app.data.status import Status
 
 class TrelloItems:
 

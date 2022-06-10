@@ -1,4 +1,4 @@
-from data.item import Item
+from todo_app.data.item import Item
 
 
 class ViewModel:

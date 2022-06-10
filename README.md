@@ -70,3 +70,24 @@ $ poetry run pytest
     * Check installation:  `ansible --version`
 * Run the playbook: `ansible-playbook ansible-playbook.yml -i inventory`
 * Check the service is running on the managed nodes
+
+## Running inside a docker container:
+### Development:
+Build the image:
+```bash
+$ docker build --target development --tag todo-app:dev .
+```
+Run the image:
+```bash
+$ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source="$(pwd)"todo_app,target=/app/todo_app todo-app:dev
+```
+
+### Production:
+Build the image:
+```bash
+$ docker build --target production --tag todo-app:prod .
+```
+Run the image:
+```bash
+$ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source="$(pwd)"todo_app,target=/app/todo_app todo-app:prod
+```
