@@ -1,5 +1,6 @@
 import pytest
 import os
+import time
 from threading import Thread
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
@@ -24,6 +25,7 @@ def app_with_temp_board():
     thread = Thread(target=lambda: application.run(use_reloader=False))
     thread.daemon = True
     thread.start()
+    time.sleep(1)
     yield application
 
     thread.join(1)
