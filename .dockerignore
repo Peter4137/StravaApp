@@ -1,2 +1,7 @@
-.*
+.env.j2
+.env.template
+.gitignore
+.venv
+.pytest_cache
+.github
 **/__pycache__/

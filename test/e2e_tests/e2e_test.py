@@ -13,7 +13,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 @pytest.fixture(scope='module')
 def app_with_temp_board():
-    file_path = find_dotenv("../.env")
+    file_path = find_dotenv(".env")
     load_dotenv(file_path, override=True)
 
     trello_items = TrelloItems()
@@ -32,7 +32,7 @@ def app_with_temp_board():
 @pytest.fixture(scope="module")
 def driver():
     options = Options()
-    options.binary_location = "C:/Program Files/Mozilla Firefox/firefox.exe"
+    options.headless = True
     with webdriver.Firefox(options = options) as driver:
         yield driver
 

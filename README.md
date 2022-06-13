@@ -89,5 +89,5 @@ $ docker build --target production --tag todo-app:prod .
 ```
 Run the image:
 ```bash
-$ docker run --env-file ./.env -p 5000:5000 --mount type=bind,source="$(pwd)"todo_app,target=/app/todo_app todo-app:prod
+$ docker run --env-file ./.env -p 80:80 --mount type=bind,source="$(pwd)"todo_app,target=/app/todo_app todo-app:prod
 ```
