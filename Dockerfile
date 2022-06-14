@@ -14,7 +14,7 @@ FROM base as production
 RUN poetry install --no-dev
 COPY todo_app todo_app
 
-ENTRYPOINT poetry run gunicorn todo_app.wsgi:start -b 0.0.0.0:80
+CMD poetry run gunicorn "todo_app.wsgi:start" -b 0.0.0.0:$PORT
 
 FROM base as development
 RUN poetry install
