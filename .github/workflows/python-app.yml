@@ -5,12 +5,12 @@ name: Python application
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, Exercie-8 ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  build:
+  build-and-test:
     name: Build and test
     runs-on: ubuntu-latest
     steps:
@@ -27,10 +27,12 @@ jobs:
       run: docker build --target test_e2e --tag todo_app:test_e2e .
     - name: Run e2e tests
       run: docker run --env-file .env todo_app:test_e2e
+
   deploy:
     name: Deploy application
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'push') && (github.ref == 'refs/heads/master') }}
+    needs: [build-and-test]
+    if: ${{ (github.event_name == 'push') && (github.ref == 'refs/heads/Exercise-8') }}
     steps:
     - uses: actions/checkout@v2
     - name: Login to Docker
