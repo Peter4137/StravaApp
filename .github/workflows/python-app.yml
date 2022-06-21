@@ -23,4 +23,4 @@ jobs:
     - name: Build docker image
       run: docker build --target test --tag todo_app:test .
     - name: Run tests
-      run: docker run todo_app:test
+      run: docker run --env-file .env todo_app:test
