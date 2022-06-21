@@ -20,7 +20,11 @@ jobs:
       run: |
         touch .env
         echo "${{ secrets.SECRET_ENV }}" > .env
-    - name: Build docker image
-      run: docker build --target test --tag todo_app:test .
-    - name: Run tests
-      run: docker run --env-file .env todo_app:test
+    - name: Build docker image for unit and integration tests
+      run: docker build --target test_unit_integration --tag todo_app:test_unit_integration .
+    - name: Run unit and integration tests
+      run: docker run todo_app:test_unit_integration
+    - name: Build docker image for e2e tests
+      run: docker build --target test_e2e --tag todo_app:test_e2e .
+    - name: Run e2e tests
+      run: docker run --env-file .env todo_app:test_e2e

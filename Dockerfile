@@ -22,7 +22,15 @@ COPY todo_app todo_app
 
 ENTRYPOINT poetry run flask run --host=0.0.0.0 --port=5000
 
-FROM base as test
+FROM base as test_unit_integration
+RUN poetry install
+
+COPY todo_app todo_app
+COPY test test
+COPY .env.test ./
+ENTRYPOINT [ "poetry", "run", "pytest", "./test/tests" ]
+
+FROM base as test_e2e
 RUN poetry install
 
 RUN apt-get install -y firefox-esr curl
@@ -34,6 +42,7 @@ RUN curl -sSLO https://github.com/mozilla/geckodriver/releases/download/${GECKOD
 
 COPY todo_app todo_app
 COPY test test
-COPY .env.test ./
-ENTRYPOINT [ "poetry", "run", "pytest", "./test" ]
+ENTRYPOINT [ "poetry", "run", "pytest", "./test/e2e_tests" ]
+
+
 
