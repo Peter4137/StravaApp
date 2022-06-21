@@ -11,23 +11,20 @@ on:
 
 jobs:
   build:
-
+    name: Build and test
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.10"
-    - name: Run image
-      uses: abatilo/actions-poetry@v2.0.0
-      with:
-        poetry-version: "1.1"
-    - name: Install dependencies
+    - name: Create env file
       run: |
-        poetry install
-    - name: Test with pytest
-      run: |
-        pwd
-        poetry run pytest ./test/tests
+        touch .env
+        echo "${{ secrets.SECRET_ENV }}" > .env
+    - name: Build docker image for unit and integration tests
+      run: docker build --target test_unit_integration --tag todo_app:test_unit_integration .
+    - name: Run unit and integration tests
+      run: docker run todo_app:test_unit_integration
+    - name: Build docker image for e2e tests
+      run: docker build --target test_e2e --tag todo_app:test_e2e .
+    - name: Run e2e tests
+      run: docker run --env-file .env todo_app:test_e2e

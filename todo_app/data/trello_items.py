@@ -122,7 +122,6 @@ class TrelloItems:
         """
         Creates a new board in trello
         """
-
         response = self.trello_request("POST", f"/1/boards", {"name": name, "idOrganization": self.organization_id})
         return response["id"]
 

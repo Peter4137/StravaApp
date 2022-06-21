@@ -1,5 +1,6 @@
 import pytest
 import os
+import time
 from threading import Thread
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
@@ -13,7 +14,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 @pytest.fixture(scope='module')
 def app_with_temp_board():
-    file_path = find_dotenv("../.env")
+    file_path = find_dotenv(".env")
     load_dotenv(file_path, override=True)
 
     trello_items = TrelloItems()
@@ -24,6 +25,7 @@ def app_with_temp_board():
     thread = Thread(target=lambda: application.run(use_reloader=False))
     thread.daemon = True
     thread.start()
+    time.sleep(1)
     yield application
 
     thread.join(1)
@@ -32,7 +34,7 @@ def app_with_temp_board():
 @pytest.fixture(scope="module")
 def driver():
     options = Options()
-    options.binary_location = "C:/Program Files/Mozilla Firefox/firefox.exe"
+    options.headless = True
     with webdriver.Firefox(options = options) as driver:
         yield driver
 
