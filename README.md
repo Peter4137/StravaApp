@@ -91,3 +91,7 @@ Run the image:
 ```bash
 $ docker run --env-file ./.env -p 80:80 --mount type=bind,source="$(pwd)"todo_app,target=/app/todo_app todo-app:prod
 ```
+
+### CD pipeline:
+If the build completes and the tests pass, the app will be automatically deployed to Heroku. 
+The url for the app is: https://peter4137-todo-app.herokuapp.com/
