@@ -48,5 +48,5 @@ jobs:
         docker build --target production --tag $DOCKER_USERNAME/todo_app:latest .
         docker push $DOCKER_USERNAME/todo_app:latest
     - name: Release app on Azure
-      run: curl -dh -X POST $AZURE_DEPLOY_WEBHOOK
+      run: curl -dH -X POST $AZURE_DEPLOY_WEBHOOK
 
