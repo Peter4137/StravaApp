@@ -93,5 +93,5 @@ $ docker run --env-file ./.env -p 80:80 --mount type=bind,source="$(pwd)"todo_ap
 ```
 
 ### CD pipeline:
-If the build completes and the tests pass, the app will be automatically deployed to Heroku. 
-The url for the app is: https://peter4137-todo-app.herokuapp.com/
+If the build completes and the tests pass, the app will be automatically deployed to Azure. 
+The url for the app is: http://peter4137-todo-app.azurewebsites.net/
