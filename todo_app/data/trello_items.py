@@ -1,7 +1,7 @@
 import os
 import requests
 import itertools
-from pymongo import MongoClient
+import pymongo
 from bson.objectid import ObjectId
 
 from todo_app.data.item import Item
@@ -11,8 +11,8 @@ from todo_app.data.status import Status
 class TrelloItems:
 
     def __init__(self) -> None:
-        self.client = MongoClient(os.environ.get('DATABASE_CONNECTION_STRING'))
-        self.db = self.client.todo_app_database
+        self.client = pymongo.MongoClient(os.environ.get('DATABASE_CONNECTION_STRING'))
+        self.db = self.client[os.environ.get('DATABASE_NAME')]
         self.items = self.db.items
 
     def get_items(self):
@@ -24,6 +24,7 @@ class TrelloItems:
         """
         items = self.items.find()
         parsed_items = [Item(item) for item in items]
+        print(sorted(parsed_items, key=lambda item: item.id))
         return sorted(parsed_items, key=lambda item: item.id)
 
     def get_item(self, id):
@@ -73,3 +74,9 @@ class TrelloItems:
             id: The ID of the item to remove
         """
         self.items.delete_one({"_id": ObjectId(id)})
+
+    def clear_all(self):
+        """
+        Removes the items collection from the database, effectively clearing all items
+        """
+        self.items.drop()
