@@ -17,10 +17,11 @@ def app_with_temp_board():
     file_path = find_dotenv(".env")
     load_dotenv(file_path, override=True)
     os.environ['DATABASE_NAME'] = "test-database"
+    os.environ['LOGIN_DISABLED'] = "True"
 
-    trello_items = DatabaseItems()
-    
+    db_items = DatabaseItems()
     application = app.create_app()
+
     thread = Thread(target=lambda: application.run(use_reloader=False))
     thread.daemon = True
     thread.start()
@@ -28,12 +29,12 @@ def app_with_temp_board():
     yield application
 
     thread.join(1)
-    trello_items.clear_all()
+    db_items.clear_all()
 
 @pytest.fixture(scope="module")
 def driver():
     options = Options()
-    options.headless = True
+    options.headless = False
     with webdriver.Firefox(options = options) as driver:
         yield driver
 
@@ -47,12 +48,12 @@ def test_full_journey(driver, app_with_temp_board):
     - Delete item
     """
     base_url = "http://localhost:5000/"
-    driver.implicitly_wait(20)
+    driver.implicitly_wait(5)
     driver.get(base_url)
     assert driver.title == 'To-Do App'
 
     add_item_input = driver.find_element(By.NAME, "title")
-    add_item_input.send_keys("Test item")
+    add_item_input.send_keys("E2E Test item")
     add_item_input.send_keys(Keys.RETURN)
 
     assert driver.find_element(By.ID, "to-do-item")

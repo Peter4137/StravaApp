@@ -1,6 +1,5 @@
 import pytest
 import os
-import requests
 from dotenv import load_dotenv, find_dotenv
 from todo_app import app
 import mongomock

@@ -1,6 +1,4 @@
 import os
-import requests
-import itertools
 import pymongo
 from bson.objectid import ObjectId
 
