@@ -3,16 +3,18 @@ import requests
 from flask_login import login_user
 from flask import redirect
 
-from todo_app.user import User
+from todo_app.auth.user import User
 
-class AppAuth:
+class AppAuthentication:
     def __init__(self):
         self.client_id = os.environ.get('OAUTH_CLIENT_ID')
         self.client_secret = os.environ.get('OAUTH_CLIENT_SECRET')
 
+    @classmethod
     def authenticate(self):
          return redirect(f"https://github.com/login/oauth/authorize?client_id={self.client_id}")
 
+    @classmethod
     def handle_login(self, code):
         access_token = self.get_access_token(code)
         user_info = self.get_user_info(access_token)

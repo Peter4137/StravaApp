@@ -14,8 +14,10 @@
         <thead>
           <tr>
             <th>Title</th>
-            <th>Action</th>
-            <th>&nbsp;</th>
+            {% if view_model.is_writer %}
+              <th>Action</th>
+              <th>&nbsp;</th>
+            {% endif %}
           </tr>
         </thead>
         <tbody>
@@ -28,17 +30,18 @@
         {% for item in view_model.to_do_items %}
           <tr class="warning" id="to-do-item">
             <td>{{ item.name }}</td>
-            <td>
-              <form action="items/progress/{{item.id}}", method="POST">
-                <input type="submit" value="Mark as doing" class="btn btn-info" id="progress-button">
-              </form>
-              
-            </td>
-            <td>
-              <form action="items/remove/{{item.id}}", method="POST">
-                <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
-              </form>
-            </td>
+            {% if view_model.is_writer %}
+              <td>
+                <form action="items/progress/{{item.id}}", method="POST">
+                  <input type="submit" value="Mark as doing" class="btn btn-info" id="progress-button">
+                </form>
+              </td>
+              <td>
+                <form action="items/remove/{{item.id}}", method="POST">
+                  <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
+                </form>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
         {% endif %}
@@ -51,16 +54,18 @@
         {% for item in view_model.doing_items %}
           <tr class="info"  id="doing-item">
             <td>{{ item.name }}</td>
-            <td>
-              <form action="items/progress/{{item.id}}", method="POST">
-                <input type="submit" value="Mark as done" class="btn btn-info" id="progress-button">
-              </form>
-            </td>
-            <td>
-              <form action="items/remove/{{item.id}}", method="POST">
-                <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
-              </form>
-            </td>
+            {% if view_model.is_writer %}
+              <td>
+                <form action="items/progress/{{item.id}}", method="POST">
+                  <input type="submit" value="Mark as done" class="btn btn-info" id="progress-button">
+                </form>
+              </td>
+              <td>
+                <form action="items/remove/{{item.id}}", method="POST">
+                  <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
+                </form>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
         {% endif %}
@@ -73,12 +78,14 @@
         {% for item in view_model.done_items %}
           <tr class="info"  id="done-item">
             <td>{{ item.name }}</td>
-            <td></td>
-            <td>
-              <form action="items/remove/{{item.id}}", method="POST">
-                <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
-              </form>
-            </td>
+            {% if view_model.is_writer %}
+              <td></td>
+              <td>
+                <form action="items/remove/{{item.id}}", method="POST">
+                  <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
+                </form>
+              </td>
+            {% endif %}
           </tr>
         {% endfor %}
         {% endif %}
@@ -87,11 +94,13 @@
     </div>
   </div>
 
-  <h3>Add new item</h3>
-  <form action="/items/add" method="POST" class="form-group">
-    <div>
-      <input type="text" id="title" name="title" placeholder="Title" required class="form-control">
-    </div>
-    <input type="submit" class="btn btn-info mt-4">
-  </form>
+  {% if view_model.is_writer %}
+    <h3>Add new item</h3>
+    <form action="/items/add" method="POST" class="form-group">
+      <div>
+        <input type="text" id="title" name="title" placeholder="Title" required class="form-control">
+      </div>
+      <input type="submit" class="btn btn-info mt-4">
+    </form>
+  {% endif %}
 {% endblock %}

@@ -1,5 +1,4 @@
 from enum import Enum
-from os import environ
 
 class Status(Enum):
     ToDo = "To Do"
