@@ -7,9 +7,9 @@ from todo_app.view_model import ViewModel
 @pytest.fixture
 def view_model():
     return ViewModel([
-        Item({"_id": 1, "name": "To do item", "status": Status.ToDo.value}),
-        Item({"_id": 1, "name": "Doing item", "status": Status.Doing.value}),
-        Item({"_id": 1, "name": "Done item", "status": Status.Done.value})
+        Item(1, "To do item", Status.ToDo.value),
+        Item(1, "Doing item", Status.Doing.value),
+        Item(1, "Done item", Status.Done.value)
     ])
 
 def test_to_do_items_in_separate_list(view_model: ViewModel):

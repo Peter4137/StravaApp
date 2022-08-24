@@ -8,7 +8,7 @@ from todo_app.data.item import Item
 from todo_app.data.list import List
 from todo_app.data.status import Status
 
-class TrelloItems:
+class DatabaseItems:
 
     def __init__(self) -> None:
         self.client = pymongo.MongoClient(os.environ.get('DATABASE_CONNECTION_STRING'))
@@ -23,8 +23,7 @@ class TrelloItems:
             list: The list of saved items.
         """
         items = self.items.find()
-        parsed_items = [Item(item) for item in items]
-        print(sorted(parsed_items, key=lambda item: item.id))
+        parsed_items = [Item.from_mongo_item(item) for item in items]
         return sorted(parsed_items, key=lambda item: item.id)
 
     def get_item(self, id):
@@ -38,7 +37,7 @@ class TrelloItems:
             item: The saved item, or None if no items match the specified ID.
         """
         item = self.items.find_one({"_id": ObjectId(id)})
-        return Item(item)
+        return Item.from_mongo_item(item)
 
     def add_item(self, title):
         """

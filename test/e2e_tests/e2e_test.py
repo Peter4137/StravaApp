@@ -4,7 +4,7 @@ import time
 from threading import Thread
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
-from todo_app.data.trello_items import TrelloItems
+from todo_app.data.db_items import DatabaseItems
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -18,7 +18,7 @@ def app_with_temp_board():
     load_dotenv(file_path, override=True)
     os.environ['DATABASE_NAME'] = "test-database"
 
-    trello_items = TrelloItems()
+    trello_items = DatabaseItems()
     
     application = app.create_app()
     thread = Thread(target=lambda: application.run(use_reloader=False))
