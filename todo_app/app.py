@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect
-from todo_app.data.trello_items import TrelloItems
+from todo_app.data.db_items import DatabaseItems
 from todo_app.view_model import ViewModel
 from todo_app.flask_config import Config
 
@@ -7,7 +7,7 @@ from todo_app.flask_config import Config
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
-    trelloItems = TrelloItems()
+    trelloItems = DatabaseItems()
 
     @app.route("/", methods=["GET"])
     def index():

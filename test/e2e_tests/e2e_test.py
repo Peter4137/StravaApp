@@ -4,7 +4,7 @@ import time
 from threading import Thread
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
-from todo_app.data.trello_items import TrelloItems
+from todo_app.data.db_items import DatabaseItems
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -16,10 +16,9 @@ from selenium.common.exceptions import NoSuchElementException
 def app_with_temp_board():
     file_path = find_dotenv(".env")
     load_dotenv(file_path, override=True)
+    os.environ['DATABASE_NAME'] = "test-database"
 
-    trello_items = TrelloItems()
-    board_id = trello_items.create_board("test1234")
-    os.environ['TRELLO_BOARD_ID'] = board_id
+    trello_items = DatabaseItems()
     
     application = app.create_app()
     thread = Thread(target=lambda: application.run(use_reloader=False))
@@ -29,7 +28,7 @@ def app_with_temp_board():
     yield application
 
     thread.join(1)
-    trello_items.delete_board(board_id)
+    trello_items.clear_all()
 
 @pytest.fixture(scope="module")
 def driver():
@@ -48,7 +47,7 @@ def test_full_journey(driver, app_with_temp_board):
     - Delete item
     """
     base_url = "http://localhost:5000/"
-    driver.implicitly_wait(2)
+    driver.implicitly_wait(20)
     driver.get(base_url)
     assert driver.title == 'To-Do App'
 
