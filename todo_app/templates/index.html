@@ -14,7 +14,7 @@
         <thead>
           <tr>
             <th>Title</th>
-            {% if view_model.is_writer %}
+            {% if view_model.can_edit_items %}
               <th>Action</th>
               <th>&nbsp;</th>
             {% endif %}
@@ -30,7 +30,7 @@
         {% for item in view_model.to_do_items %}
           <tr class="warning" id="to-do-item">
             <td>{{ item.name }}</td>
-            {% if view_model.is_writer %}
+            {% if view_model.can_edit_items %}
               <td>
                 <form action="items/progress/{{item.id}}", method="POST">
                   <input type="submit" value="Mark as doing" class="btn btn-info" id="progress-button">
@@ -54,7 +54,7 @@
         {% for item in view_model.doing_items %}
           <tr class="info"  id="doing-item">
             <td>{{ item.name }}</td>
-            {% if view_model.is_writer %}
+            {% if view_model.can_edit_items %}
               <td>
                 <form action="items/progress/{{item.id}}", method="POST">
                   <input type="submit" value="Mark as done" class="btn btn-info" id="progress-button">
@@ -78,7 +78,7 @@
         {% for item in view_model.done_items %}
           <tr class="info"  id="done-item">
             <td>{{ item.name }}</td>
-            {% if view_model.is_writer %}
+            {% if view_model.can_edit_items %}
               <td></td>
               <td>
                 <form action="items/remove/{{item.id}}", method="POST">
@@ -94,13 +94,19 @@
     </div>
   </div>
 
-  {% if view_model.is_writer %}
+  {% if view_model.can_edit_items %}
     <h3>Add new item</h3>
     <form action="/items/add" method="POST" class="form-group">
       <div>
         <input type="text" id="title" name="title" placeholder="Title" required class="form-control">
       </div>
       <input type="submit" class="btn btn-info mt-4">
+    </form>
+  {% endif %}
+
+  {% if view_model.can_edit_users %}
+    <form action="/users", method="GET">
+      <input type="submit" value="Go to users page" class="btn btn-primary mt-4 mb-4" id="index-button">
     </form>
   {% endif %}
 {% endblock %}

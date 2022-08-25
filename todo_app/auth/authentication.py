@@ -1,24 +1,24 @@
 import os
 import requests
-from flask_login import login_user
+from flask_login import login_user, logout_user
 from flask import redirect
 
 from todo_app.auth.user import User
+from todo_app.data.db_users import DatabaseUsers
 
 class AppAuthentication:
     def __init__(self):
         self.client_id = os.environ.get('OAUTH_CLIENT_ID')
         self.client_secret = os.environ.get('OAUTH_CLIENT_SECRET')
+        self.databaseUsers = DatabaseUsers()
 
-    @classmethod
     def authenticate(self):
          return redirect(f"https://github.com/login/oauth/authorize?client_id={self.client_id}")
 
-    @classmethod
     def handle_login(self, code):
         access_token = self.get_access_token(code)
         user_info = self.get_user_info(access_token)
-        user = User(user_info["id"])
+        user = self.databaseUsers.add_user_if_new(user_info["id"], user_info["login"])
         login_user(user)
         return
 
@@ -34,7 +34,8 @@ class AppAuthentication:
             
             response.raise_for_status()
         except Exception:
-            pass
+            logout_user()
+            return
         return response.json()["access_token"]
 
     def get_user_info(self, access_token):
