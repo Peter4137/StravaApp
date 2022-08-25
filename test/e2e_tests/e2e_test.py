@@ -46,7 +46,7 @@ def app_with_temp_board():
 @pytest.fixture(scope="module")
 def driver():
     options = Options()
-    options.headless = False
+    options.headless = True
     with webdriver.Firefox(options = options) as driver:
         yield driver
 
