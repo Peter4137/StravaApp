@@ -38,9 +38,9 @@ class DatabaseUsers:
         return self.users.count_documents({"role": UserRole.Admin.value}) != 0
 
     def update_user_role(self, id, role):
-        if (role not in [role.value.lower() for role in UserRole]):
+        if (role not in [role.value for role in UserRole]):
             raise ValueError(f"{role} is not a recognised user role")
-        self.users.update_one({"_id": ObjectId(id)}, {"$set": {"role": role}})
+        self.users.update_one({"_id": ObjectId(id.to_bytes(12, "little"))}, {"$set": {"role": role}})
 
     def get_users(self):
         users = self.users.find()
@@ -50,3 +50,6 @@ class DatabaseUsers:
     def get_user(self, id):
         user = self.users.find_one({"_id": ObjectId(id.to_bytes(12, "little"))})
         return User.from_mongo_user(user)
+
+    def clear_all(self):
+        self.users.drop()

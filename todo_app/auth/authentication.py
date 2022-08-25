@@ -10,17 +10,20 @@ class AppAuthentication:
     def __init__(self):
         self.client_id = os.environ.get('OAUTH_CLIENT_ID')
         self.client_secret = os.environ.get('OAUTH_CLIENT_SECRET')
+        self.login_disabled = os.environ.get('LOGIN_DISABLED')
         self.databaseUsers = DatabaseUsers()
 
     def authenticate(self):
-         return redirect(f"https://github.com/login/oauth/authorize?client_id={self.client_id}")
+        return redirect(f"https://github.com/login/oauth/authorize?client_id={self.client_id}")
 
     def handle_login(self, code):
-        access_token = self.get_access_token(code)
-        user_info = self.get_user_info(access_token)
+        if self.login_disabled:
+            user_info = {"id": 1, "login": "Admin User"}
+        else:
+            access_token = self.get_access_token(code)
+            user_info = self.get_user_info(access_token)
         user = self.databaseUsers.add_user_if_new(user_info["id"], user_info["login"])
         login_user(user)
-        return
 
     def get_access_token(self, code):
         try:

@@ -83,7 +83,7 @@ def create_app():
     @login_required
     @AppAuthorization.admin
     def update_user_role(id, role):
-        databaseUsers.update_user_role(id, role)
+        databaseUsers.update_user_role(int(id), role.capitalize())
         return redirect("/users")
 
     return app

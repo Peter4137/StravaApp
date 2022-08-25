@@ -11,7 +11,7 @@ def view_model():
         Item(1, "To do item", Status.ToDo.value),
         Item(1, "Doing item", Status.Doing.value),
         Item(1, "Done item", Status.Done.value)
-    ], User(1,1, UserRole.Admin, "Username"))
+    ], User(1, UserRole.Admin, "Username"))
 
 def test_to_do_items_in_separate_list(view_model: ItemsViewModel):
     assert len(view_model.to_do_items) == 1

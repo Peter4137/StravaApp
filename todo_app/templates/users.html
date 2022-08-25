@@ -23,9 +23,9 @@
 
         <tbody>
         {% for user in view_model.users %}
-          <tr class="warning" id="to-do-item">
-            <td>{{ user.name }}</td>
-            <td>{{ user.role }}</td>
+          <tr class="warning" id="user-row-{{ user.id }}">
+            <td id="user-name">{{ user.name }}</td>
+            <td id="user-role">{{ user.role }}</td>
             <td>
                 <form action="users/{{user.id}}/reader", method="POST">
                   <input type="submit" value="Make Reader" class="btn btn-success" id="reader-button">
