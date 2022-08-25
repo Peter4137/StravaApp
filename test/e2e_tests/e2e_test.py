@@ -62,9 +62,6 @@ def test_full_item_journey(driver, app_with_temp_board):
     base_url = "http://localhost:5000/"
     driver.implicitly_wait(5)
 
-    # Set user as admin to be able to edit page
-    driver.get(base_url + "login/callback?code=1")
-
     driver.get(base_url)
     assert driver.title == 'To-Do App'
 
@@ -101,9 +98,6 @@ def test_user_update_journey(driver, app_with_temp_board):
     """
     base_url = "http://localhost:5000/"
     driver.implicitly_wait(5)
-
-    # Set user as admin so that users page button is shown
-    driver.get(base_url + "login/callback?code=1")
 
     driver.get(base_url)
     users_page_button = driver.find_element(By.ID, "users-button")

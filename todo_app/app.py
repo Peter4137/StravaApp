@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from flask_login import LoginManager, login_required, current_user, logout_user
 
+
 from todo_app.data.db_items import DatabaseItems
 from todo_app.data.db_users import DatabaseUsers
 from todo_app.items_view_model import ItemsViewModel
@@ -9,12 +10,14 @@ from todo_app.flask_config import Config
 from todo_app.auth.user import User
 from todo_app.auth.authorization import AppAuthorization
 from todo_app.auth.authentication import AppAuthentication
+from todo_app.auth.anonymous_user import AnonymousUser
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config())
 
     login_manager = LoginManager()
+    login_manager.anonymous_user = AnonymousUser
     app_authentication = AppAuthentication()
 
     @login_manager.unauthorized_handler
