@@ -18,14 +18,42 @@ jobs:
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      GOOGLE_PROJECT_ID: ${{ secrets.GOOGLE_PROJECT_ID }}
     steps:
     - uses: actions/checkout@v2
-    - name: Login to Docker
-      run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-    - name: Build and push to Docker Hub
+
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: '${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}'
+
+    - uses: 'docker/login-action@v1'
+      with:
+        registry: 'gcr.io'
+        username: 'oauth2accesstoken'
+        password: '${{ steps.auth.outputs.access_token }}'
+
+    - name: Build and push to Google artifact registry
       run: |
-        docker build --target production --tag $DOCKER_USERNAME/strava_app:latest .
-        docker push $DOCKER_USERNAME/strava_app:latest
+        docker build --target production --tag gcr.io/$GOOGLE_PROJECT_ID/strava_app:latest .
+        docker push gcr.io/$GOOGLE_PROJECT_ID/strava_app:latest
+
+
+    - id: 'Deploy to cloud run'
+      uses: 'google-github-actions/deploy-cloudrun@v0'
+      with:
+        service: 'strava-app'
+        image: 'gcr.io/$GOOGLE_PROJECT_ID/strava_app'
+
+    # - name: Login to Docker
+    #   run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+    # - name: Build and push to Docker Hub
+    #   run: |
+    #     docker build --target production --tag $DOCKER_USERNAME/strava_app:latest .
+    #     docker push $DOCKER_USERNAME/strava_app:latest
+    
+
     # - name: Release app on Azure
     #   run: curl -dH -X POST $AZURE_DEPLOY_WEBHOOK
 
