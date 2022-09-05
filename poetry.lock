@@ -610,8 +610,8 @@ h11 = ">=0.9.0,<1"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "3.9"
-content-hash = "151561e7b04459d7744f91cb254703d33eecdff6f74898605393f47b45332c25"
+python-versions = "3.11"
+content-hash = "9e8e61708b3d5da92a365999f326513e249d381228a90568c1efab7c7de2bc5a"
 
 [metadata.files]
 async-generator = [
