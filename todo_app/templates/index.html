@@ -1,112 +1,15 @@
 {% extends "layout.html" %}
-{% block title %}To-Do App{% endblock %}
+{% block title %}Strava App{% endblock %}
 
 {% block content %}
   <div class="jumbotron">
-    <h1 class="display-4">To-Do App</h1>
-    <p class="lead">Just another to-do app.</p>
+    <h1 class="display-4">Strava App</h1>
   </div>
 
   <div class="row">
     <div class="col-md-12">
-      <h2>Items</h2>
-      <table class="table mb-4">
-        <thead>
-          <tr>
-            <th>Title</th>
-            {% if view_model.can_edit_items %}
-              <th>Action</th>
-              <th>&nbsp;</th>
-            {% endif %}
-          </tr>
-        </thead>
-        <tbody>
-
-        {% if view_model.to_do_items|length > 0 %}
-        <tr>
-          <td colspan="3"><b>To Do</b></td>
-        </tr>
-
-        {% for item in view_model.to_do_items %}
-          <tr class="warning" id="to-do-item">
-            <td>{{ item.name }}</td>
-            {% if view_model.can_edit_items %}
-              <td>
-                <form action="items/progress/{{item.id}}", method="POST">
-                  <input type="submit" value="Mark as doing" class="btn btn-info" id="progress-button">
-                </form>
-              </td>
-              <td>
-                <form action="items/remove/{{item.id}}", method="POST">
-                  <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
-                </form>
-              </td>
-            {% endif %}
-          </tr>
-        {% endfor %}
-        {% endif %}
-
-        {% if view_model.doing_items|length > 0 %}
-        <tr>
-          <td colspan="3"><b>Doing</b></td>
-        </tr>
-
-        {% for item in view_model.doing_items %}
-          <tr class="info"  id="doing-item">
-            <td>{{ item.name }}</td>
-            {% if view_model.can_edit_items %}
-              <td>
-                <form action="items/progress/{{item.id}}", method="POST">
-                  <input type="submit" value="Mark as done" class="btn btn-info" id="progress-button">
-                </form>
-              </td>
-              <td>
-                <form action="items/remove/{{item.id}}", method="POST">
-                  <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
-                </form>
-              </td>
-            {% endif %}
-          </tr>
-        {% endfor %}
-        {% endif %}
-
-        {% if view_model.done_items|length > 0 %}
-        <tr>
-          <td colspan="3"><b>Done</b></td>
-        </tr>
-
-        {% for item in view_model.done_items %}
-          <tr class="info"  id="done-item">
-            <td>{{ item.name }}</td>
-            {% if view_model.can_edit_items %}
-              <td></td>
-              <td>
-                <form action="items/remove/{{item.id}}", method="POST">
-                  <input type="submit" value="Remove" class="btn btn-danger" id="delete-button">
-                </form>
-              </td>
-            {% endif %}
-          </tr>
-        {% endfor %}
-        {% endif %}
-        </tbody>
-      </table>
+      <h2>User details</h2>
+      <div>{{ view_model.user.firstname }} {{ view_model.user.lastname }}</div>
     </div>
   </div>
-
-  {% if view_model.can_edit_items %}
-    <h3>Add new item</h3>
-    <form action="/items/add" method="POST" class="form-group">
-      <div>
-        <input type="text" id="title" name="title" placeholder="Title" required class="form-control">
-      </div>
-      <input type="submit" class="btn btn-info mt-4">
-    </form>
-  {% endif %}
-
-  {% if view_model.can_edit_users %}
-    <form action="/users", method="GET">
-      <input type="submit" value="Go to users page" class="btn btn-primary mt-4 mb-4" id="users-button">
-    </form>
-  {% endif %}
 {% endblock %}

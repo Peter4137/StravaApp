@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "todo-app"
+name = "strava-app"
 version = "0.1.0"
-description = "A simple ToDo app for your DevOps apprenticeship"
+description = "A simple Strava app"
 authors = []
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "3.9"
 flask = "^1.1.2"
 python-dotenv = "^0.14.0"
 requests = "^2.26.0"
@@ -14,6 +14,9 @@ markupsafe ="2.0.1"
 pymongo = "^4.2.0"
 mongomock = "^4.1.2"
 Flask-Login = "^0.6.2"
+matplotlib = "^3.5.3"
+mpld3 = "^0.5.8"
+scipy = "^1.9.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

@@ -4,10 +4,7 @@ import time
 from threading import Thread
 from todo_app import app
 from dotenv import load_dotenv, find_dotenv
-from todo_app.auth.user_role import UserRole
-from todo_app.auth.user import User
-from todo_app.data import db_users
-from todo_app.data.db_items import DatabaseItems
+from todo_app.data.strava_client import DatabaseItems
 from todo_app.data.db_users import DatabaseUsers
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options

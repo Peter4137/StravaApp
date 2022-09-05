@@ -1,7 +1,7 @@
 import pytest
 from todo_app.data.item import Item
 from todo_app.data.status import Status
-from todo_app.items_view_model import ItemsViewModel
+from todo_app.user_view_model import ItemsViewModel
 from todo_app.auth.user import User
 from todo_app.auth.user_role import UserRole
 

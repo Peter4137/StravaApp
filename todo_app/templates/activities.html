@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block title %}Strava App{% endblock %}
+
+{% block content %}
+  <div class="jumbotron">
+    <h1 class="display-4">Strava App</h1>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <h2>Activities</h2>
+      <table>
+        <thead>
+            <tr>
+                <th>Activity</th>
+                <th>Sport</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activity in view_model.activities %}
+            <tr>
+                <td><a href="/activity/{{activity.id}}">{{ activity.name }}</a></td>
+                <td>{{ activity.sport }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+      
+    </div>
+  </div>
+{% endblock %}
