@@ -10,24 +10,6 @@ on:
     branches: [ master ]
 
 jobs:
-  build_and_test:
-    name: Build and test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Create env file
-      run: |
-        touch .env
-        echo "${{ secrets.SECRET_ENV }}" > .env
-    - name: Build docker image for unit and integration tests
-      run: docker build --target test_unit_integration --tag todo_app:test_unit_integration .
-    - name: Run unit and integration tests
-      run: docker run todo_app:test_unit_integration
-    - name: Build docker image for e2e tests
-      run: docker build --target test_e2e --tag todo_app:test_e2e .
-    - name: Run e2e tests
-      run: docker run --env-file .env todo_app:test_e2e
-
   deploy:
     name: Deploy application
     runs-on: ubuntu-latest
@@ -36,15 +18,14 @@ jobs:
     env:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      AZURE_DEPLOY_WEBHOOK: ${{ secrets.AZURE_DEPLOY_WEBHOOK }}
     steps:
     - uses: actions/checkout@v2
     - name: Login to Docker
       run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
     - name: Build and push to Docker Hub
       run: |
-        docker build --target production --tag $DOCKER_USERNAME/todo_app:latest .
-        docker push $DOCKER_USERNAME/todo_app:latest
-    - name: Release app on Azure
-      run: curl -dH -X POST $AZURE_DEPLOY_WEBHOOK
+        docker build --target production --tag $DOCKER_USERNAME/strava_app:latest .
+        docker push $DOCKER_USERNAME/strava_app:latest
+    # - name: Release app on Azure
+    #   run: curl -dH -X POST $AZURE_DEPLOY_WEBHOOK
 
