@@ -6,6 +6,17 @@
     <h1 class="display-4">Strava App</h1>
   </div>
 
+  <h2>Enter best race pace</h2>
+  <form action="/user/vdot" method="POST" class="form-group">
+    <div>
+      <input type="text" id="distance" name="distance" placeholder="Race distance in metres" required class="form-control" type="number">
+      <input type="text" id="pace" name="pace" placeholder="Pace in seconds per km" required class="form-control" type="number">
+    </div>
+    <input type="submit" class="btn btn-info mt-4">
+  </form>
+
+  <div>Current Vdot: {{ view_model.vdot }}</div>
+
   <div class="row">
     <div class="col-md-12">
 

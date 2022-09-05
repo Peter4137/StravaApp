@@ -43,8 +43,8 @@ def create_app():
     @app.route("/", methods=["GET"])
     @login_required
     def index():
-        activities = strava_client.get_activities()
-        activities_view_model = ActivitiesViewModel(activities)
+        activities = strava_client.get_runs()
+        activities_view_model = ActivitiesViewModel(activities, running_calculator.user_vdot)
         return render_template('activities.html', view_model=activities_view_model)
 
     @app.route("/activity/<id>", methods=["GET"])
@@ -56,7 +56,7 @@ def create_app():
     @app.route("/performance", methods=["GET"])
     @login_required
     def performance():
-        sessions = strava_client.get_activities()
+        sessions = strava_client.get_runs()
         running_ids = []
         for session in sessions:
             if session.sport == 'Run':
@@ -64,13 +64,13 @@ def create_app():
         plt_html = running_calculator.plot_sessions(running_ids)
         return render_template('plot.html', figure=plt_html)
 
-    # @app.route("/items/add", methods=["POST"])
-    # @login_required
-    # @AppAuthorization.writer
-    # def add_item():
-    #     title = request.form.get("title")
-    #     databaseItems.add_item(title)
-    #     return redirect("/")
+    @app.route("/user/vdot", methods=["POST"])
+    @login_required
+    def set_vdot():
+        distance = request.form.get("distance")
+        pace = request.form.get("pace")
+        running_calculator.set_vdot(int(distance), int(pace))
+        return redirect("/")
 
     @app.route("/login/callback", methods=["GET"])
     def login_callback():

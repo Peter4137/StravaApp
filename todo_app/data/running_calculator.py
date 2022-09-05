@@ -9,6 +9,9 @@ class RunningCalculator:
   def __init__(self):
     self.user_vdot = 50
 
+  def set_vdot(self, distance, pace):
+    self.user_vdot = self.calc_vdot(distance, pace)
+
   def get_pace(self, distance,vdot):
     # distance in m
     [a,b,c,d,e,f,g,h,i,j] = [ 2.12585218e-12, -1.06457439e-03,  5.77331309e-10,  1.70220844e-07,
@@ -24,7 +27,7 @@ class RunningCalculator:
         return pace - self.get_pace(input_distance, vdot)
 
       vdot = fsolve(pace_func, 50)
-      return vdot
+      return vdot[0]
 
   def calc_relative_effort(self, vdot, distance, time):
       pace = 1000 * time / distance

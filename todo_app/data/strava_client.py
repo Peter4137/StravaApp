@@ -30,6 +30,10 @@ class StravaClient:
         activities = self.strava_request('GET', 'athlete/activities', {"per_page": 50})
         return [Activity.from_strava_response(activity) for activity in activities]
 
+    def get_runs(self):
+        activities = self.strava_request('GET', 'athlete/activities', {"per_page": 100})
+        return filter(lambda activity: activity.sport == 'Run', [Activity.from_strava_response(activity) for activity in activities])
+
     def get_activity_streams(self, id):
         params = {
             "keys": "velocity_smooth,time",
