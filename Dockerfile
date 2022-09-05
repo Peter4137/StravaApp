@@ -1,4 +1,4 @@
-FROM python:3.11.0a6-slim-buster as base
+FROM python:3.9.13-buster as base
 
 RUN apt-get update && apt-get install -y \
     gcc \
