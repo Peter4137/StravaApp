@@ -33,6 +33,7 @@ jobs:
         password: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
     - name: Build and push to Google artifact registry
       run: |
+        gcloud auth configure-docker us-central1-docker.pkg.dev
         docker build --target production --tag us-central1-docker.pkg.dev/stravaapp-361611/strava-app/strava_app:latest .
         docker push us-central1-docker.pkg.dev/stravaapp-361611/strava-app/strava_app:latest
     - name: 'Deploy to cloud run'
