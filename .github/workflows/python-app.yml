@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - id: 'auth'
+    - name: Google cloud auth
       name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v0'
       with:
@@ -40,7 +40,7 @@ jobs:
         docker push gcr.io/$GOOGLE_PROJECT_ID/strava_app:latest
 
 
-    - id: 'Deploy to cloud run'
+    - name: 'Deploy to cloud run'
       uses: 'google-github-actions/deploy-cloudrun@v0'
       with:
         service: 'strava-app'
