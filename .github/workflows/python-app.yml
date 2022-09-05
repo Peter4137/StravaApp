@@ -40,7 +40,7 @@ jobs:
       uses: 'google-github-actions/deploy-cloudrun@v0'
       with:
         service: 'strava-app'
-        image: 'us-central1-docker.pkg.dev/$GOOGLE_PROJECT_ID/strava-app/strava_app'
+        image: 'us-central1-docker.pkg.dev/stravaapp-361611/strava-app/strava_app:latest'
 
     # - name: Login to Docker
     #   run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin

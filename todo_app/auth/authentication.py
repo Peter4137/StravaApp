@@ -9,10 +9,11 @@ class AppAuthentication:
     def __init__(self):
         self.client_id = os.environ.get('OAUTH_CLIENT_ID')
         self.client_secret = os.environ.get('OAUTH_CLIENT_SECRET')
+        self.redirect_url = os.environ.get('APP_URL')
         self.login_disabled = os.environ.get('LOGIN_DISABLED') == "True"
 
     def authenticate(self):
-        return redirect(f"https://www.strava.com/oauth/authorize?client_id={self.client_id}&redirect_uri=http://localhost:5000/login/callback&response_type=code&scope=activity:read_all")
+        return redirect(f"https://www.strava.com/oauth/authorize?client_id={self.client_id}&redirect_uri={self.redirect_url}/login/callback&response_type=code&scope=activity:read_all")
 
     def handle_login(self, code):
         token_response = self.exchange_token(code)
