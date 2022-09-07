@@ -38,6 +38,7 @@ class RunningCalculator:
       strava_client = StravaClient()
       laps = strava_client.get_activity_laps(id)
       relative_efforts = np.array([self.calc_relative_effort(self.user_vdot, lap["distance"], lap["elapsed_time"]) for lap in laps])
+      return relative_efforts
       key_laps = [effort > 0.8 for effort in relative_efforts]
       condensed_laps = []
       current_sum_dist = 0
@@ -60,7 +61,7 @@ class RunningCalculator:
   def plot_session(self, id):
       session = self.get_interval_relative_efforts(id)
 
-      plt.plot(range(len(session)), session)
+      plt.bar(range(len(session)), session)
       plt.xlabel('Lap number')
       plt.ylabel('Relative performance')
       fig = plt.gcf()
